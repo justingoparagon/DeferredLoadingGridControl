@@ -8,14 +8,13 @@
                  xmlns:local="clr-namespace:T153134" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
                  mc:Ignorable="d" Name="myInternalGrid"
                  d:DesignHeight="450" d:DesignWidth="800" ItemsSource="{Binding Items, RelativeSource={RelativeSource Mode=Self}}"
-                 Loaded="myInternalGrid_Loaded"
-                 IsVisibleChanged="myInternalGrid_IsVisibleChanged" LayoutUpdated="myInternalGrid_LayoutUpdated" Unloaded="myInternalGrid_Unloaded" Initialized="myInternalGrid_Initialized">
+                 Loaded="myInternalGrid_Loaded" LayoutUpdated="myInternalGrid_LayoutUpdated">
     <dxg:GridControl.Resources>
         <Style TargetType="dxg:LightweightCellEditor">
             <Setter Property="MaxHeight" Value="20" />
         </Style>
         <Style TargetType="dxg:GridColumn">
-            <Setter Property="IsSmart" Value="False" />
+            <!-- Not sure why, but switching between tabs is almost instantaneous with a CellTemplate set with what I'd assume is considered a non-lightweight editor (TextEdit). -->
             <!--<Setter Property="CellTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -25,15 +24,8 @@
             </Setter>-->
         </Style>
     </dxg:GridControl.Resources>
-    <!--<dxg:GridControl.Template>
-        <ControlTemplate>
-                <dx:LoadingDecorator Name="decorator1" Loaded="decorator1_Loaded">
-                    <ContentPresenter/>
-                </dx:LoadingDecorator>
-        </ControlTemplate>
-    </dxg:GridControl.Template>-->
     <dxg:GridControl.View>
-        <dxg:TableView AutoWidth="True" Loaded="TableView_Loaded" />
+        <dxg:TableView AutoWidth="True"/>
     </dxg:GridControl.View>
     <dxg:GridColumn FieldName="ID"/>
     <dxg:GridColumn FieldName="BigText"/>

@@ -24,16 +24,6 @@ namespace T153134
     /// </summary>
     public partial class DeferredLoadingGridControl : GridControl
     {
-        public LoadingDecorator Decorator
-        {
-            get { return (LoadingDecorator)GetValue(DecoratorProperty); }
-            set { SetValue(DecoratorProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Decorator.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DecoratorProperty =
-            DependencyProperty.Register("Decorator", typeof(LoadingDecorator), typeof(DeferredLoadingGridControl), new PropertyMetadata(null));
-
         public bool IsLoadingControls
         {
             get { return (bool)GetValue(IsLoadingControlsProperty); }
@@ -65,30 +55,14 @@ namespace T153134
 
         public async Task LoadGrid()
         {
+            // I have no clue how, but with this we can ensure the loading indicator spins on the initial run every time.
+            // Without this call, it only runs half the time, the other half freezing.
             await Task.Delay(100);
 
             await Task.Run(async () => await Dispatcher.BeginInvoke(new Action(() =>
             {
-                var decorator = Decorator;
-                //var decorator = (LoadingDecorator)Template.FindName("decorator1", this);
-
-                //decorator.IsSplashScreenShown = true;
-
                 InitializeComponent();
-
-                //decorator.IsSplashScreenShown = false;
-
-                //Dispatcher.BeginInvoke(new Action(() =>
-                //    {
-                //        decorator.IsSplashScreenShown = false;
-                //    }), DispatcherPriority.Render);
-            }
-            )));
-        }
-
-        private void decorator1_Loaded(object sender, RoutedEventArgs e)
-        {
-            SetCurrentValue(DecoratorProperty, sender);
+            })));
         }
 
         bool intermediary = false;
@@ -100,69 +74,17 @@ namespace T153134
             e.Handled = true;
         }
 
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            base.OnRender(drawingContext);
-        }
-
-        private void myInternalGrid_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
-
         bool firstUpdate = true;
 
         private async void myInternalGrid_LayoutUpdated(object sender, EventArgs e)
         {
             if (intermediary || firstUpdate)
             {
-                //intermediary = isloadingcontrols = false;
-
-                await Task.Delay(0);
-
                 await Dispatcher.BeginInvoke(new Action(() =>
-                firstUpdate = intermediary = IsLoadingControls = false
+                    firstUpdate = intermediary = IsLoadingControls = false
                 ));
             }
         }
-
-        private void TableView_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void myInternalGrid_Unloaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void myInternalGrid_Initialized(object sender, EventArgs e)
-        {
-
-        }
-
-        //private void button1_Click(object sender, RoutedEventArgs e)
-        //{
-        //    decorator.IsSplashScreenShown = true;
-        //    PopulateChart(); // UI blocking action
-        //    Dispatcher.BeginInvoke(new Action(() =>
-        //    {
-        //        decorator.IsSplashScreenShown = false;
-        //    }), DispatcherPriority.Render);
-        //}
-
-        //private void PopulateChart()
-        //{
-        //    this.chartControl1.BeginInit();
-        //    for (int i = 0; i < 2000; i++)
-        //    {
-        //        barSeries.Points.Add(new DevExpress.Xpf.Charts.SeriesPoint(i.ToString(), i * 2));
-        //    }
-
-        //    System.Threading.Thread.Sleep(3000);
-
-        //    this.chartControl1.EndInit();
-        //}
     }
 
     public class Item
