@@ -6,9 +6,7 @@
         Loaded="Window_Loaded" WindowState="Maximized">
     <TabControl>
         <TabItem Header="Main">
-            <dx:LoadingDecorator Name="decorator" IsSplashScreenShown="{Binding IsLoadingControls, ElementName=grid}" UseFadeEffect="False">
-                <t153134:DeferredLoadingGridControl x:Name="grid"/>
-            </dx:LoadingDecorator>
+            <t153134:DeferredLoadingGridControl x:Name="grid"/>
         </TabItem>
         <TabItem Header="Test"/>
     </TabControl>

@@ -55,10 +55,6 @@ namespace T153134
 
         public async Task LoadGrid()
         {
-            // I have no clue how, but with this we can ensure the loading indicator spins on the initial run every time.
-            // Without this call, it only runs half the time, the other half freezing.
-            await Task.Delay(100);
-
             await Task.Run(async () => await Dispatcher.BeginInvoke(new Action(() =>
             {
                 InitializeComponent();
