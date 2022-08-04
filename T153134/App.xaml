@@ -1,8 +1,20 @@
 ﻿<Application x:Class="T153134.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:t153134="clr-namespace:T153134"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ControlTemplate x:Key="def">
+            <ContentPresenter/>
+        </ControlTemplate>
+        <DataTemplate DataType="{x:Type t153134:MainGridViewModel}">
+            <dx:LoadingDecorator Name="decorator" IsSplashScreenShown="{Binding IsLoadingControls, ElementName=grid}" UseFadeEffect="False" Loaded="decorator_Loaded">
+                <t153134:DeferredLoadingGridControl x:Name="grid"/>
+            </dx:LoadingDecorator>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type t153134:BlankTabViewModel}">
+            <Label Content="This is an empty tab!"/>
+        </DataTemplate>
     </Application.Resources>
 </Application>

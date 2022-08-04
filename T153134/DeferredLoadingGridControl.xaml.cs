@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Xpf.Core;
+using DevExpress.Xpf.Grid;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace T153134
 {
@@ -22,6 +24,26 @@ namespace T153134
     /// </summary>
     public partial class DeferredLoadingGridControl : GridControl
     {
+        public LoadingDecorator Decorator
+        {
+            get { return (LoadingDecorator)GetValue(DecoratorProperty); }
+            set { SetValue(DecoratorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Decorator.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DecoratorProperty =
+            DependencyProperty.Register("Decorator", typeof(LoadingDecorator), typeof(DeferredLoadingGridControl), new PropertyMetadata(null));
+
+        public bool IsLoadingControls
+        {
+            get { return (bool)GetValue(IsLoadingControlsProperty); }
+            set { SetValue(IsLoadingControlsProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsLoadingControls.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsLoadingControlsProperty =
+            DependencyProperty.Register("IsLoadingControls", typeof(bool), typeof(DeferredLoadingGridControl), new PropertyMetadata(true));
+
         public virtual ObservableCollection<Item> Items { get; set; } = GetItems();
 
         private static ObservableCollection<Item> GetItems()
@@ -30,7 +52,7 @@ namespace T153134
 
             for (int i = 0; i < 20000; i++)
             {
-                l.Add(new Item());
+                l.Add(new Item() { ID = i + 1 });
             }
 
             return new ObservableCollection<Item>(l);
@@ -41,14 +63,106 @@ namespace T153134
             //InitializeComponent();
         }
 
-        public void LoadGrid()
+        public async Task LoadGrid()
         {
-            //InitializeComponent();
-            Dispatcher.BeginInvoke(new Action(() =>
-            InitializeComponent()
-            //grid.LoadGrid())
-            ));
+            await Task.Delay(100);
+
+            await Task.Run(async () => await Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var decorator = Decorator;
+                //var decorator = (LoadingDecorator)Template.FindName("decorator1", this);
+
+                //decorator.IsSplashScreenShown = true;
+
+                InitializeComponent();
+
+                //decorator.IsSplashScreenShown = false;
+
+                //Dispatcher.BeginInvoke(new Action(() =>
+                //    {
+                //        decorator.IsSplashScreenShown = false;
+                //    }), DispatcherPriority.Render);
+            }
+            )));
         }
+
+        private void decorator1_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetCurrentValue(DecoratorProperty, sender);
+        }
+
+        bool intermediary = false;
+
+        private void myInternalGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            intermediary = IsLoadingControls = true;
+
+            e.Handled = true;
+        }
+
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            base.OnRender(drawingContext);
+        }
+
+        private void myInternalGrid_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+
+        }
+
+        bool firstUpdate = true;
+
+        private async void myInternalGrid_LayoutUpdated(object sender, EventArgs e)
+        {
+            if (intermediary || firstUpdate)
+            {
+                //intermediary = isloadingcontrols = false;
+
+                await Task.Delay(0);
+
+                await Dispatcher.BeginInvoke(new Action(() =>
+                firstUpdate = intermediary = IsLoadingControls = false
+                ));
+            }
+        }
+
+        private void TableView_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void myInternalGrid_Unloaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void myInternalGrid_Initialized(object sender, EventArgs e)
+        {
+
+        }
+
+        //private void button1_Click(object sender, RoutedEventArgs e)
+        //{
+        //    decorator.IsSplashScreenShown = true;
+        //    PopulateChart(); // UI blocking action
+        //    Dispatcher.BeginInvoke(new Action(() =>
+        //    {
+        //        decorator.IsSplashScreenShown = false;
+        //    }), DispatcherPriority.Render);
+        //}
+
+        //private void PopulateChart()
+        //{
+        //    this.chartControl1.BeginInit();
+        //    for (int i = 0; i < 2000; i++)
+        //    {
+        //        barSeries.Points.Add(new DevExpress.Xpf.Charts.SeriesPoint(i.ToString(), i * 2));
+        //    }
+
+        //    System.Threading.Thread.Sleep(3000);
+
+        //    this.chartControl1.EndInit();
+        //}
     }
 
     public class Item

@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         Title="MainWindow" Height="1000" Width="1900" xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts" xmlns:t153134="clr-namespace:T153134"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded" WindowState="Maximized">
+    <Window.Resources>
+    </Window.Resources>
     <!--<dx:LoadingDecorator Name="decorator" OwnerLock="None">
         <Grid>
             <dxc:ChartControl HorizontalAlignment="Left" Margin="10,32,0,0" Name="chartControl1" VerticalAlignment="Top" Height="279">
@@ -17,5 +19,13 @@
         <Button Content="Button" Height="23" HorizontalAlignment="Left" Margin="26,4,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
     </Grid>
     </dx:LoadingDecorator>-->
-    <t153134:DeferredLoadingGridControl x:Name="grid"/>
+    <TabControl>
+        
+        <TabItem Header="Main">
+            <dx:LoadingDecorator Name="decorator" IsSplashScreenShown="{Binding IsLoadingControls, ElementName=grid}" UseFadeEffect="False">
+                <t153134:DeferredLoadingGridControl x:Name="grid"/>
+            </dx:LoadingDecorator>
+        </TabItem>
+        <TabItem Header="Test"/>
+    </TabControl>
 </Window>

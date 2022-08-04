@@ -13,6 +13,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DevExpress.Xpf.Core;
 using System.Windows.Threading;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace T153134
 {
@@ -21,16 +23,38 @@ namespace T153134
     /// </summary>
     public partial class MainWindow : Window
     {
+        //public ObservableCollection<object> ViewModels
+        //{
+        //    get { return new ObservableCollection<object>((ObservableCollection<object>)GetValue(ViewModelsProperty)); }
+        //    set { SetValue(ViewModelsProperty, value); }
+        //}
+
+        //// Using a DependencyProperty as the backing store for ViewModels.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty ViewModelsProperty =
+        //    DependencyProperty.Register("ViewModels", typeof(ObservableCollection<object>), typeof(MainWindow), new PropertyMetadata(null));
+
+        public Collection<object> ViewModels { get; set; } = new Collection<object>() { new MainGridViewModel(), new BlankTabViewModel() };
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //Dispatcher.BeginInvoke(new Action(() =>
-            grid.LoadGrid();
-            //));
+            await grid.LoadGrid();
+            /*
+            Task.Run(async () =>
+            {
+                await Task.Delay(3000);
+                var l = new List<object>() { new MainGridViewModel(), new BlankTabViewModel() };
+                await Dispatcher.BeginInvoke(new Action(() => {
+                    ViewModels = new ObservableCollection<object>();
+                    ViewModels.Add(l[0]);
+                    ViewModels.Add(l[1]);
+                }
+                ));
+            });*/
         }
 
         //private void button1_Click(object sender, RoutedEventArgs e)

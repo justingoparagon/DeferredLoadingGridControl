@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Xpf.Core;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -14,6 +15,22 @@ namespace T153134 {
         {
 
             base.OnStartup(e);
+        }
+
+        private async void decorator_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var s = sender as LoadingDecorator;
+
+                var a = s.Child as DeferredLoadingGridControl;
+
+                await a.LoadGrid();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }
