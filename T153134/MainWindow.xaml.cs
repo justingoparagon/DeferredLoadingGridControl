@@ -30,6 +30,11 @@ namespace T153134
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //await grid.LoadGrid();
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
             await grid.LoadGrid();
         }
     }

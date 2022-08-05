@@ -6,7 +6,14 @@
         Loaded="Window_Loaded" WindowState="Maximized">
     <TabControl>
         <TabItem Header="Main">
-            <t153134:DeferredLoadingGridControl x:Name="grid"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button Click="Button_Click" Content="Load Grid" HorizontalAlignment="Center" FontSize="20" Margin="5"/>
+                <t153134:DeferredLoadingGridControl x:Name="grid" Grid.Row="1"/>
+            </Grid>
         </TabItem>
         <TabItem Header="Test"/>
     </TabControl>
